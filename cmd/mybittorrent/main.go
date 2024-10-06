@@ -16,6 +16,10 @@ var _ = json.Marshal
 // - 5:hello -> hello
 // - 10:hello12345 -> hello12345
 func decodeBencode(bencodedString string) (interface{}, error) {
+	// str := "abc"
+	// if str[0] == "a" {
+
+	// }
 	if unicode.IsDigit(rune(bencodedString[0])) {
 		var firstColonIndex int
 
@@ -34,6 +38,12 @@ func decodeBencode(bencodedString string) (interface{}, error) {
 		}
 
 		return bencodedString[firstColonIndex+1 : firstColonIndex+1+length], nil
+	} else if string(bencodedString[0]) == "i" && string(bencodedString[len(bencodedString) - 1]) == "e" {
+		number, err := strconv.ParseInt(bencodedString[1:len(bencodedString)-1], 10, 64)
+		if err != nil {
+			return "", err
+		}
+		return number, nil
 	} else {
 		return "", fmt.Errorf("Only strings are supported at the moment")
 	}
